@@ -12,7 +12,6 @@ import (
 	"gofr.dev/pkg/gofr/cmd/terminal"
 	"gofr.dev/pkg/gofr/container"
 	"gofr.dev/pkg/gofr/http/middleware"
-	"gofr.dev/pkg/gofr/logging"
 )
 
 type Context struct {
@@ -34,7 +33,6 @@ type Context struct {
 	// Terminal needs to be public as CMD applications need to access various terminal user interface(TUI) features.
 	Out terminal.Output
 
-	logging.ContextLogger
 }
 
 type AuthInfo interface {
@@ -163,7 +161,6 @@ func newContext(w Responder, r Request, c *container.Container) *Context {
 		Request:       r,
 		responder:     w,
 		Container:     c,
-		ContextLogger: *logging.NewContextLogger(r.Context(), c.Logger),
 	}
 }
 
@@ -174,7 +171,6 @@ func newCMDContext(w Responder, r Request, c *container.Container, out terminal.
 		Request:       r,
 		Container:     c,
 		Out:           out,
-		ContextLogger: *logging.NewContextLogger(r.Context(), c.Logger),
 	}
 }
 

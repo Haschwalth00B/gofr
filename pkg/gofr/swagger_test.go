@@ -17,7 +17,6 @@ import (
 	"gofr.dev/pkg/gofr/container"
 	gofrHTTP "gofr.dev/pkg/gofr/http"
 	"gofr.dev/pkg/gofr/http/response"
-	"gofr.dev/pkg/gofr/logging"
 )
 
 func TestOpenAPIHandler(t *testing.T) {
@@ -63,7 +62,6 @@ func TestOpenAPIHandler_Error(t *testing.T) {
 	testContainer, _ := container.NewMockContainer(t)
 
 	ctx := createTestContext(http.MethodGet, "/.well-known/openapi.json", "", nil, testContainer)
-	ctx.ContextLogger = *logging.NewContextLogger(ctx, testContainer.Logger)
 
 	result, err := OpenAPIHandler(ctx)
 
@@ -114,7 +112,6 @@ func TestSwaggerUIHandler_Error(t *testing.T) {
 
 	gofrReq := gofrHTTP.NewRequest(testReq)
 	ctx := newContext(gofrHTTP.NewResponder(httptest.NewRecorder(), http.MethodGet), gofrReq, testContainer)
-	ctx.ContextLogger = *logging.NewContextLogger(ctx, testContainer.Logger)
 
 	resp, err := SwaggerUIHandler(ctx)
 
