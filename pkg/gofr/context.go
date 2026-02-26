@@ -12,6 +12,7 @@ import (
 	"gofr.dev/pkg/gofr/cmd/terminal"
 	"gofr.dev/pkg/gofr/container"
 	"gofr.dev/pkg/gofr/http/middleware"
+	"gofr.dev/pkg/gofr/logging"
 )
 
 type Context struct {
@@ -156,22 +157,30 @@ func (a *authInfo) GetAPIKey() string {
 // }
 
 func newContext(w Responder, r Request, c *container.Container) *Context {
-	return &Context{
+	ctx := &Context{
 		Context:       r.Context(),
 		Request:       r,
 		responder:     w,
 		Container:     c,
 	}
+
+        ctx.Container.Logger = logging.NewContextLogger(r.Context(), c.Logger)
+    	
+        return ctx
 }
 
 func newCMDContext(w Responder, r Request, c *container.Container, out terminal.Output) *Context {
-	return &Context{
+	ctx := &Context{
 		Context:       r.Context(),
 		responder:     w,
 		Request:       r,
 		Container:     c,
 		Out:           out,
 	}
+
+    	ctx.Container.Logger = logging.NewContextLogger(r.Context(), c.Logger)
+    	
+    	return ctx
 }
 
 func (c *Context) GetCorrelationID() string {
